@@ -4,9 +4,20 @@
       <PostForm class="p-2" @create="createPost" />
     </MyDialog>
     <div class="font-bold text-xl mb-2">Posting page</div>
-    <MyButton @click="showDialog">Create post</MyButton>
-    <MySelect :options="options" @select-option="updateOption" />
-    <PostList :posts="sortPosts" v-if="!loadingPosts" @remove="removePost" />
+    <div class="flex">
+      <MyButton class="mx-2 my-2" @click="showDialog">Create post</MyButton>
+      <MyInput
+        class="mx-2 my-2"
+        placeholder="Search..."
+        v-model="searchQuery"
+      />
+      <MySelect
+        class="mx-2 my-2"
+        :options="options"
+        @select-option="updateOption"
+      />
+    </div>
+    <PostList :posts="queriedPost" v-if="!loadingPosts" @remove="removePost" />
     <div v-else>
       <svg
         class="mr-2 w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
@@ -38,11 +49,15 @@ export default {
     return {
       show: false,
       posts: [],
+      page: 1,
+      limit: 10,
+      totalPages: 0,
       options: [
         { value: "title", name: "By Title" },
         { value: "body", name: "By Description" },
       ],
       selectedOption: "",
+      searchQuery: "",
       loadingPosts: true,
     };
   },
@@ -55,11 +70,26 @@ export default {
         post1[this.selectedOption].localeCompare(post2[this.selectedOption])
       );
     },
+    queriedPost() {
+      if (!this.searchQuery) {
+        return this.sortPosts;
+      }
+      return this.sortPosts?.filter((post) =>
+        post.body.toLowerCase().includes(this.searchQuery)
+      );
+    },
   },
 
   async created() {
-    this.posts = await getPosts();
+    const { posts, totalPosts } = await getPosts(this.page, this.limit);
+    this.posts = posts;
+    this.totalPages = Math.ceil(totalPosts / this.limit);
     this.loadingPosts = false;
+  },
+  watch: {
+    searchQuery() {
+      this.searchQuery = this.searchQuery.toLowerCase();
+    },
   },
   methods: {
     createPost(post) {

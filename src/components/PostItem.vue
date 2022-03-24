@@ -3,7 +3,7 @@
     class="w-full px-4 py-2 border-b border-gray-200 rounded-lg dark:border-gray-600"
   >
     <div class="flex">
-      <section class="w-full h-12">
+      <section class="w-full h-16 min-h-full">
         <p>
           <strong>Название:</strong>
           {{ post.title }}

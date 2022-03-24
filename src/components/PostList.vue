@@ -1,9 +1,11 @@
 <template>
   <div class="text-lg">
-    <div v-if="posts.length">
+    <div v-if="posts?.length">
       <p class="font-bold text-xl mb-2">Posts list</p>
-      <ul
+      <TransitionGroup
         class="w-full text-sm font-medium text-gray-900 bg-white rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        name="list"
+        tag="ul"
       >
         <PostItem
           class="post p-2 m-3"
@@ -12,7 +14,7 @@
           :post="post"
           @remove="$emit('remove', post)"
         />
-      </ul>
+      </TransitionGroup>
     </div>
     <div v-else>No posts</div>
   </div>
@@ -39,5 +41,17 @@ export default {
 <style scoped>
 .post {
   border: 2px solid teal;
+}
+
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>

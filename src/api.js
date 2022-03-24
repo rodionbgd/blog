@@ -1,11 +1,13 @@
-export async function getPosts() {
+export async function getPosts(page, limit) {
   let response;
   try {
     response = await fetch(
-      "https://jsonplaceholder.typicode.com/posts/?_limit=5"
+      `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=${limit}`
     );
   } catch (e) {
     alert(e);
   }
-  return response?.json();
+  const posts = await response.json();
+  const totalPosts = response.headers.get("x-total-count");
+  return { posts, totalPosts };
 }
