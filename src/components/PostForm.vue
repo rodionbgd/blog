@@ -1,6 +1,6 @@
 <template>
   <form class="m-3" @keydown.enter="createPost">
-    <MyInput placeholder="title" v-model="post.title" />
+    <MyInput placeholder="title" v-model="post.title" v-focus />
     <MyInput placeholder="description" v-model="post.body" />
     <MyButton
       :disabled="!isValid"
@@ -24,7 +24,6 @@ export default {
       post: {
         title: "",
         body: "",
-        lastId: 1,
       },
     };
   },
@@ -38,7 +37,6 @@ export default {
       if (!this.isValid) {
         return;
       }
-      this.post.lastId++;
       this.$emit("create", this.post);
       this.post = {
         title: "",

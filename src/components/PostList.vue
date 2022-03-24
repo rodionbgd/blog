@@ -10,7 +10,7 @@
         <PostItem
           class="post p-2 m-3"
           v-for="post in posts"
-          :key="post.id"
+          :key="post?.id"
           :post="post"
           @remove="$emit('remove', post)"
         />

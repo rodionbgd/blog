@@ -35,7 +35,7 @@
         />
       </svg>
     </div>
-    <div class="text-5xl mb-5" ref="observer"></div>
+    <div class="text-5xl mb-5" v-intersection="loadMorePosts"></div>
   </div>
 </template>
 
@@ -84,17 +84,6 @@ export default {
 
   async mounted() {
     await this.loadPosts();
-    const options = {
-      rootMargin: "0px",
-      threshold: 1.0,
-    };
-    const cb = (entries) => {
-      if (entries[0].isIntersecting && this.page < this.totalPages) {
-        this.loadMorePosts();
-      }
-    };
-    const observer = new IntersectionObserver(cb, options);
-    observer.observe(this.$refs.observer);
   },
   watch: {
     searchQuery() {
@@ -118,6 +107,7 @@ export default {
       this.totalPages = Math.ceil(totalPosts / this.limit);
     },
     createPost(post) {
+      post.id = this.posts.at(-1).id + 1;
       this.posts.push(post);
       this.hideDialog();
     },
