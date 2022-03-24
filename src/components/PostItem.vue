@@ -5,15 +5,16 @@
     <div class="flex">
       <section class="w-full h-16 min-h-full">
         <p>
-          <strong>Название:</strong>
+          <strong>Title:</strong>
           {{ post.title }}
         </p>
         <p>
-          <strong>Описание:</strong>
+          <strong>Description:</strong>
           {{ post.body }}
         </p>
       </section>
-      <MyButton @click="$emit('remove', post)"> x </MyButton>
+      <MyButton @click="$router.push(`/posts/${post.id}`)"> &#9757; </MyButton>
+      <MyButton class="mr-2 ml-2" @click="$emit('remove', post)"> x </MyButton>
     </div>
   </li>
 </template>
