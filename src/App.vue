@@ -35,6 +35,7 @@
         />
       </svg>
     </div>
+    <div class="text-5xl mb-5" ref="observer"></div>
   </div>
 </template>
 
@@ -80,11 +81,19 @@ export default {
     },
   },
 
-  async created() {
-    const { posts, totalPosts } = await getPosts(this.page, this.limit);
-    this.posts = posts;
-    this.totalPages = Math.ceil(totalPosts / this.limit);
-    this.loadingPosts = false;
+  async mounted() {
+    await this.loadPosts();
+    const options = {
+      rootMargin: "0px",
+      threshold: 1.0,
+    };
+    const cb = (entries) => {
+      if (entries[0].isIntersecting && this.page < this.totalPages) {
+        this.loadMorePosts();
+      }
+    };
+    const observer = new IntersectionObserver(cb, options);
+    observer.observe(this.$refs.observer);
   },
   watch: {
     searchQuery() {
@@ -92,6 +101,21 @@ export default {
     },
   },
   methods: {
+    async loadPosts() {
+      const { posts, totalPosts } = await getPosts(this.page, this.limit);
+      this.posts = posts;
+      this.totalPages = Math.ceil(totalPosts / this.limit);
+      this.loadingPosts = false;
+    },
+    async loadMorePosts() {
+      this.page += 1;
+      const { posts: loadedPosts, totalPosts } = await getPosts(
+        this.page,
+        this.limit
+      );
+      this.posts = [...this.posts, ...loadedPosts];
+      this.totalPages = Math.ceil(totalPosts / this.limit);
+    },
     createPost(post) {
       this.posts.push(post);
       this.hideDialog();
