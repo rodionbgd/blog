@@ -17,7 +17,9 @@
           <li>
             <MyAnchor @click="$router.push('/posts')"> Posts </MyAnchor>
           </li>
-          <MyAnchor @click="$router.push('/about')"> About </MyAnchor>
+          <li>
+            <MyAnchor @click="$router.push('/about')">About</MyAnchor>
+          </li>
         </ul>
       </div>
     </div>
