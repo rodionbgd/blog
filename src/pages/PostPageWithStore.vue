@@ -46,7 +46,7 @@ import PostList from "@/components/PostList.vue";
 import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
-  name: "PostPage",
+  name: "PostPageWithStore",
   components: { PostForm, PostList },
   data() {
     return {
@@ -71,12 +71,14 @@ export default {
   },
 
   async mounted() {
+    this.setPage(1);
     await this.loadPosts();
   },
   methods: {
     ...mapMutations({
       setSearchQuery: "post/setSearchQuery",
       setSelectedOption: "post/setSelectedOption",
+      setPage: "post/setPage",
     }),
     ...mapActions({
       loadMorePosts: "post/loadMorePosts",
